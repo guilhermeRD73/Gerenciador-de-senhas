@@ -1,6 +1,7 @@
 from tkinter import messagebox
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
+import tkinter as tk
 
 class AddScreen:
     def __init__(self, root, controller, back_callback):
@@ -43,7 +44,6 @@ class AddScreen:
         """Adiciona um novo e-mail e senha."""
         email = self.email_entry.get().strip()
         password = self.password_entry.get().strip()
-        
         success, message = self.controller.add_email_password(email, password)
         if success:
             messagebox.showinfo("Sucesso", message)

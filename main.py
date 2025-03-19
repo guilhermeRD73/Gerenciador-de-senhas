@@ -7,12 +7,11 @@ import os
 class MainApp:
     def __init__(self, root):
         self.root = root
-
-        # Caminho da planilha no servidor de arquivos
-        self.file_path = r"\\10.1.1.120\Callisto\Downloads\teste.xlsx"  # Caminho do arquivo
+        # Defina o caminho relativo da planilha
+        PLANILHA_PATH = "//10.1.1.120/Callisto/Downloads/Gerenciador de senhas/senhas.xlsx"  # Nome da planilha no mesmo diretório
 
         # Inicializa o controlador e carrega a planilha automaticamente
-        self.controller = EmailController(self.file_path)
+        self.controller = EmailController(PLANILHA_PATH)
 
         # Inicializa a tela de listagem
         self.show_list_screen()
