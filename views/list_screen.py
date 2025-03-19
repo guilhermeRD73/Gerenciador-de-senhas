@@ -92,7 +92,7 @@ class ListScreen:
         # Abre a janela de edição
         self.edit_window = ttk.Toplevel(self.root)
         self.edit_window.title("Editar E-mail e Senha")
-        self.edit_window.geometry("400x200")
+        self.edit_window.geometry("500x300")
 
         # Frame de edição
         edit_frame = ttk.Frame(self.edit_window, padding=20)
