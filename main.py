@@ -2,11 +2,17 @@ import ttkbootstrap as ttk
 from views.list_screen import ListScreen
 from views.add_screen import AddScreen
 from controllers.controller import EmailController
+import os
 
 class MainApp:
     def __init__(self, root):
         self.root = root
-        self.controller = EmailController()
+
+        # Caminho da planilha no servidor de arquivos
+        self.file_path = r"\\10.1.1.120\Callisto\Downloads\teste.xlsx"  # Caminho do arquivo
+
+        # Inicializa o controlador e carrega a planilha automaticamente
+        self.controller = EmailController(self.file_path)
 
         # Inicializa a tela de listagem
         self.show_list_screen()

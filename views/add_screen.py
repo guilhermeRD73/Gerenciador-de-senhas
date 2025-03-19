@@ -43,11 +43,7 @@ class AddScreen:
         """Adiciona um novo e-mail e senha."""
         email = self.email_entry.get().strip()
         password = self.password_entry.get().strip()
-
-        if not email or not password:
-            messagebox.showwarning("Aviso", "Preencha o e-mail e a senha.")
-            return
-
+        
         success, message = self.controller.add_email_password(email, password)
         if success:
             messagebox.showinfo("Sucesso", message)

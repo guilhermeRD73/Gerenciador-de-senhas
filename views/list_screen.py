@@ -1,7 +1,8 @@
-from tkinter import filedialog, messagebox
+from tkinter import messagebox
 import tkinter as tk
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
+import pyperclip
 
 class ListScreen:
     def __init__(self, root, controller, open_add_screen_callback):
@@ -16,10 +17,6 @@ class ListScreen:
         # Título
         self.label = ttk.Label(self.main_frame, text="Listagem de E-mails e Senhas", font=("Arial", 18, "bold"))
         self.label.pack(pady=10)
-
-        # Botão para carregar planilha
-        self.load_button = ttk.Button(self.main_frame, text="Carregar Planilha", bootstyle=SUCCESS, command=self.load_file)
-        self.load_button.pack(pady=10)
 
         # Frame de pesquisa
         self.search_frame = ttk.LabelFrame(self.main_frame, text="Pesquisar E-mail", padding=10)
@@ -38,29 +35,54 @@ class ListScreen:
         self.result_listbox = tk.Listbox(self.result_frame, width=80, height=10)
         self.result_listbox.pack(fill="both", expand=True, padx=5, pady=5)
 
-        # Botões para editar e excluir
+        # Frame para botões de ação (copiar e-mail, copiar senha, editar, excluir)
         self.buttons_frame = ttk.Frame(self.result_frame)
         self.buttons_frame.pack(pady=10)
 
-        self.edit_button = ttk.Button(self.buttons_frame, text="Editar", bootstyle=WARNING, command=self.edit_email)
+        # Botão para copiar e-mail
+        self.copy_email_button = ttk.Button(
+            self.buttons_frame, 
+            text="Copiar E-mail", 
+            bootstyle=INFO, 
+            command=self.copy_email
+        )
+        self.copy_email_button.pack(side="left", padx=5)
+
+        # Botão para copiar senha
+        self.copy_password_button = ttk.Button(
+            self.buttons_frame, 
+            text="Copiar Senha", 
+            bootstyle=INFO, 
+            command=self.copy_password
+        )
+        self.copy_password_button.pack(side="left", padx=5)
+
+        # Botão para editar
+        self.edit_button = ttk.Button(
+            self.buttons_frame, 
+            text="Editar", 
+            bootstyle=WARNING, 
+            command=self.edit_email
+        )
         self.edit_button.pack(side="left", padx=5)
 
-        self.delete_button = ttk.Button(self.buttons_frame, text="Excluir", bootstyle=DANGER, command=self.delete_email)
+        # Botão para excluir
+        self.delete_button = ttk.Button(
+            self.buttons_frame, 
+            text="Excluir", 
+            bootstyle=DANGER, 
+            command=self.delete_email
+        )
         self.delete_button.pack(side="left", padx=5)
 
         # Botão para adicionar novo registro
-        self.add_button = ttk.Button(self.main_frame, text="Adicionar Novo Registro", bootstyle=PRIMARY, command=self.open_add_screen_callback)
+        self.add_button = ttk.Button(
+            self.main_frame, 
+            text="Adicionar Novo Registro", 
+            bootstyle=PRIMARY, 
+            command=self.open_add_screen_callback
+        )
         self.add_button.pack(pady=10)
-
-    def load_file(self):
-        """Carrega a planilha do Excel."""
-        file_path = filedialog.askopenfilename(filetypes=[("Excel files", "*.xlsx *.xls")])
-        if file_path:
-            success, message = self.controller.load_file(file_path)
-            if success:
-                messagebox.showinfo("Sucesso", message)
-            else:
-                messagebox.showerror("Erro", message)
 
     def search_email(self):
         """Pesquisa e-mails e exibe os resultados."""
@@ -78,6 +100,32 @@ class ListScreen:
             self.result_listbox.delete(0, tk.END)
             self.result_listbox.insert(tk.END, result)
 
+    # ... (outros métodos permanecem iguais)
+
+    def copy_email(self):
+        """Copia o e-mail selecionado para a área de transferência."""
+        selected = self.result_listbox.curselection()
+        if not selected:
+            messagebox.showwarning("Aviso", "Selecione um e-mail para copiar.")
+            return
+
+        selected_text = self.result_listbox.get(selected)
+        email = selected_text.split(" | ")[0].replace("E-mail: ", "")
+        pyperclip.copy(email)  # Copia o e-mail para a área de transferência
+        messagebox.showinfo("Sucesso", f"E-mail '{email}' copiado para a área de transferência.")
+
+    def copy_password(self):
+        """Copia a senha selecionada para a área de transferência."""
+        selected = self.result_listbox.curselection()
+        if not selected:
+            messagebox.showwarning("Aviso", "Selecione um e-mail para copiar a senha.")
+            return
+
+        selected_text = self.result_listbox.get(selected)
+        senha = selected_text.split(" | ")[1].replace("Senha: ", "")
+        pyperclip.copy(senha)  # Copia a senha para a área de transferência
+        messagebox.showinfo("Sucesso", f"Senha copiada para a área de transferência.")
+
     def edit_email(self):
         """Edita o e-mail selecionado."""
         selected = self.result_listbox.curselection()
@@ -92,7 +140,7 @@ class ListScreen:
         # Abre a janela de edição
         self.edit_window = ttk.Toplevel(self.root)
         self.edit_window.title("Editar E-mail e Senha")
-        self.edit_window.geometry("500x300")
+        self.edit_window.geometry("450x300")
 
         # Frame de edição
         edit_frame = ttk.Frame(self.edit_window, padding=20)

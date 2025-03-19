@@ -1,9 +1,12 @@
 import pandas as pd
 from tkinter import filedialog, messagebox
+import os
 
 class EmailManager:
-    def __init__(self):
+    def __init__(self, file_path=None):
         self.data = pd.DataFrame(columns=["Email", "Senha"])
+        if file_path and os.path.exists(file_path):  # Verifica se o arquivo existe
+            self.load_file(file_path)
 
     def load_file(self, file_path):
         """Carrega uma planilha Excel."""
@@ -28,7 +31,7 @@ class EmailManager:
         """Adiciona um novo e-mail e senha."""
         if email in self.data["Email"].values:
             return False, "E-mail já existe."
-        self.data = self.data.append({"Email": email, "Senha": password}, ignore_index=True)
+        self.data = self.data._append({"Email": email, "Senha": password}, ignore_index=True)
         return True, "E-mail adicionado com sucesso!"
 
     def edit_email_password(self, email, new_email, new_password):

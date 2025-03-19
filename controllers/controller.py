@@ -1,8 +1,8 @@
 from models.email_manager import EmailManager
 
 class EmailController:
-    def __init__(self):
-        self.model = EmailManager()
+    def __init__(self, file_path=None):
+        self.model = EmailManager(file_path)  # Passa o caminho da planilha para o EmailManager
 
     def load_file(self, file_path):
         """Carrega a planilha do Excel."""
@@ -11,7 +11,7 @@ class EmailController:
             return True, "Planilha carregada com sucesso!"
         else:
             return False, result  # Retorna a mensagem de erro
-
+        
     def search_email(self, name):
         """Pesquisa e-mails e retorna uma lista de tuplas (email, senha)."""
         success, result = self.model.search_email(name)
